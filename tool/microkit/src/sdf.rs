@@ -1215,6 +1215,26 @@ impl VirtualMachine {
 }
 
 impl SysMemoryRegion {
+    fn new(config: &Config, name: String, size: u64, page_size: Option<PageSize>, phys_addr: SysMemoryRegionPaddr, text_pos: Option<roxmltree::TextPos>, kind: SysMemoryRegionKind) -> SysMemoryRegion
+    {
+        let (page_size_specified_by_user, ps) = match page_size
+        {
+            Some(s) => (true, s),
+            None => (false, config.page_sizes()[0].into())
+        };
+        let page_count = size / ps;
+        SysMemoryRegion {
+            name,
+            size,
+            page_size_specified_by_user,
+            page_size: ps,
+            page_count,
+            phys_addr,
+            text_pos,
+            kind
+        }
+    }
+
     fn from_xml(
         config: &Config,
         xml_sdf: &XmlSystemDescription,
