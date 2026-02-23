@@ -1215,7 +1215,7 @@ impl VirtualMachine {
 }
 
 impl SysMemoryRegion {
-    fn new(config: &Config, name: String, size: u64, page_size: Option<PageSize>, phys_addr: SysMemoryRegionPaddr, text_pos: Option<roxmltree::TextPos>, kind: SysMemoryRegionKind) -> SysMemoryRegion
+    pub fn new(config: &Config, name: String, size: u64, page_size: Option<PageSize>, phys_addr: SysMemoryRegionPaddr, text_pos: Option<roxmltree::TextPos>, kind: SysMemoryRegionKind) -> SysMemoryRegion
     {
         let (page_size_specified_by_user, ps) = match page_size
         {
