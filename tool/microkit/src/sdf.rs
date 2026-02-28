@@ -247,9 +247,9 @@ impl Display for CpuCore {
 #[derive(Debug, PartialEq, Eq)]
 pub struct ProtectionDomain {
     /// Only populated for child protection domains
-    pub id: Option<u64>,
+pub id: Option<u64>,
     pub name: String,
-    pub priority: u8,
+pub priority: u8,
     pub budget: u64,
     pub period: u64,
     pub passive: bool,
@@ -437,6 +437,53 @@ impl ProtectionDomain {
         }
 
         ioports
+    }
+
+    pub fn new(
+        id: Option<u64>,
+        name: String,
+        priority: u8,
+        budget: u64,
+        period: u64,
+        passive: bool,
+        stack_size: u64,
+        smc: bool,
+        cpu: CpuCore,
+        program_image: PathBuf,
+        maps: Vec<SysMap>,
+        irqs: Vec<SysIrq>,
+        ioports: Vec<IOPort>,
+        setvars: Vec<SysSetVar>,
+        virtual_machine: Option<VirtualMachine>,
+        child_pds: Vec<ProtectionDomain>,
+        has_children: bool,
+        parent: Option<usize>,
+        setvar_id: Option<String>,
+        text_pos: Option<roxmltree::TextPos>
+    ) -> ProtectionDomain
+    {
+        ProtectionDomain {
+            id,
+            name,
+            priority,
+            budget,
+            period,
+            passive,
+            stack_size,
+            smc,
+            cpu,
+            program_image,
+            maps,
+            irqs,
+            ioports,
+            setvars,
+            virtual_machine,
+            child_pds,
+            has_children,
+            parent,
+            setvar_id,
+            text_pos
+        }
     }
 
     fn from_xml(
@@ -1222,7 +1269,7 @@ impl SysMemoryRegion {
             Some(s) => (true, s),
             None => (false, config.page_sizes()[0].into())
         };
-        let page_count = size / ps;
+        let page_count = size / (ps as u64);
         SysMemoryRegion {
             name,
             size,
